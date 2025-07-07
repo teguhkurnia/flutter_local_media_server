@@ -13,6 +13,7 @@ class MediaPageBloc extends Bloc<MediaPageEvent, MediaPageState> {
     : _mediaRepository = mediaRepository,
       super(const MediaPageState()) {
     on<FetchMediasEvent>(_onFetchMedias);
+    on<FetchMoreMediasEvent>(_onFetchMoreMedias);
   }
 
   Future<void> _onFetchMedias(
@@ -27,6 +28,33 @@ class MediaPageBloc extends Bloc<MediaPageEvent, MediaPageState> {
       );
 
       emit(state.copyWith(status: MediaPageStatus.loaded, medias: medias));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: MediaPageStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onFetchMoreMedias(
+    FetchMoreMediasEvent event,
+    Emitter<MediaPageState> emit,
+  ) async {
+    emit(state.copyWith(status: MediaPageStatus.fetchMore));
+    try {
+      final List<Media> medias = await _mediaRepository.fetchMedias(
+        libraryId: event.libraryId,
+        page: event.page,
+      );
+
+      emit(
+        state.copyWith(
+          status: MediaPageStatus.loaded,
+          medias: List.of(state.medias)..addAll(medias),
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(

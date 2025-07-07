@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:local_media_server/domain/entities/library.dart';
+import 'dart:async';
 
 abstract class LibraryRemoteDataSource {
   Future<List<Library>> loadLibraries({int page = 1});
@@ -15,10 +16,9 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
         queryParameters: {'page': page},
       );
 
-      final data =
-          (response.data!['data'] as List<dynamic>)
-              .map((e) => Library.fromJson(e))
-              .toList();
+      final data = (response.data!['data'] as List<dynamic>)
+          .map((e) => Library.fromJson(e))
+          .toList();
 
       return data;
     } catch (e) {

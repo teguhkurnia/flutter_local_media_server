@@ -11,6 +11,7 @@ class Media extends Equatable {
     required this.duration,
     required this.fileSize,
     required this.thumbnailUrl,
+    required this.aspectRatio,
   });
 
   final String id;
@@ -20,6 +21,7 @@ class Media extends Equatable {
   final double duration;
   final int fileSize;
   final String? thumbnailUrl;
+  final double aspectRatio;
 
   factory Media.fromJson(Map<String, dynamic> json) {
     return Media(
@@ -33,6 +35,7 @@ class Media extends Equatable {
       duration: json["duration"]?.toDouble() ?? 0.0,
       fileSize: json["file_size"],
       thumbnailUrl: json["thumbnail_url"],
+      aspectRatio: json["aspect_ratio"]?.toDouble() ?? 1.0,
     );
   }
 

@@ -67,10 +67,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       routerConfig: _router,
       title: 'Local Media Server',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
-        useMaterial3: true,
-      ),
+      theme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
     );
   }

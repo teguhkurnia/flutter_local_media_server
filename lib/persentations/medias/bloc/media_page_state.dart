@@ -1,6 +1,6 @@
 part of 'media_page_bloc.dart';
 
-enum MediaPageStatus { initial, loading, loaded, error }
+enum MediaPageStatus { initial, loading, fetchMore, loaded, error }
 
 class MediaPageState extends Equatable {
   final MediaPageStatus status;

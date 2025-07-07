@@ -11,16 +11,11 @@ class PlayPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Media media = GoRouterState.of(context).extra as Media;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Play Media')),
-      body: _buildMediaPlayer(media),
-    );
+    return Scaffold(body: SafeArea(child: _buildMediaPlayer(media)));
   }
 
   Widget _buildMediaPlayer(Media media) {
     String url = "http://192.168.0.118:8000/api/v1/medias/file/${media.id}";
-
-    print('Media URL: $url');
 
     switch (media.type) {
       case MediaType.video:
@@ -30,7 +25,7 @@ class PlayPage extends StatelessWidget {
       case MediaType.photo:
         return Image.network(
           url,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
             return const Text('Error loading image');
           },
@@ -60,24 +55,23 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   initState() {
     super.initState();
-    videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.parse(widget.url),
-      )
-      ..initialize().then((_) {
-        setState(() {
-          chewieController = ChewieController(
-            videoPlayerController: videoPlayerController,
-            autoPlay: true,
-            looping: true,
-            materialProgressColors: ChewieProgressColors(
-              playedColor: Colors.red,
-              handleColor: Colors.redAccent,
-              backgroundColor: Colors.grey,
-              bufferedColor: Colors.lightBlueAccent,
-            ),
-          );
-        });
-      });
+    videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.url))
+          ..initialize().then((_) {
+            setState(() {
+              chewieController = ChewieController(
+                videoPlayerController: videoPlayerController,
+                autoPlay: true,
+                looping: true,
+                materialProgressColors: ChewieProgressColors(
+                  playedColor: Colors.red,
+                  handleColor: Colors.redAccent,
+                  backgroundColor: Colors.grey,
+                  bufferedColor: Colors.lightBlueAccent,
+                ),
+              );
+            });
+          });
   }
 
   @override
@@ -91,13 +85,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     // Placeholder for video player widget
     return Center(
-      child: AspectRatio(
-        aspectRatio: videoPlayerController.value.aspectRatio,
-        child:
-            chewieController != null
-                ? Chewie(controller: chewieController!)
-                : const CircularProgressIndicator(),
-      ),
+      child: chewieController != null
+          ? Chewie(controller: chewieController!)
+          : const CircularProgressIndicator(),
     );
   }
 }
