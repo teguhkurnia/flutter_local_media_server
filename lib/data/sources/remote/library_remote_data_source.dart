@@ -2,17 +2,22 @@ import 'package:dio/dio.dart';
 import 'package:local_media_server/domain/entities/library.dart';
 import 'dart:async';
 
+import 'package:local_media_server/domain/entities/server.dart';
+
 abstract class LibraryRemoteDataSource {
   Future<List<Library>> loadLibraries({int page = 1});
 }
 
 class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
-  final dio = Dio();
+  final Dio dio;
+
+  LibraryRemoteDataSourceImpl({required this.dio});
+
   @override
   Future<List<Library>> loadLibraries({int page = 1}) async {
     try {
       final response = await dio.get<Map<String, dynamic>>(
-        'http://192.168.0.118:8000/api/v1/libraries',
+        'libraries',
         queryParameters: {'page': page},
       );
 
